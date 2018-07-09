@@ -25,11 +25,11 @@ type dummyUaaClient struct {
 	Error           error
 }
 
-func (d *dummyUaaClient) ClientCredentialGrant(clientId, clientSecret string) (string, error) {
+func (d *dummyUaaClient) ClientCredentialGrant(clientId, clientSecret string) (string, string, error) {
 	d.ClientId = clientId
 	d.ClientSecret = clientSecret
 
-	return d.NewAccessToken, d.Error
+	return d.NewAccessToken, d.NewRefreshToken, d.Error
 }
 
 func (d *dummyUaaClient) PasswordGrant(clientId, clientSecret, username, password string) (string, string, error) {

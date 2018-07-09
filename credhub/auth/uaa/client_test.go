@@ -30,7 +30,7 @@ var _ = Describe("Client", func() {
 				Expect(r.PostForm.Get("client_id")).To(Equal("client-id"))
 				Expect(r.PostForm.Get("client_secret")).To(Equal("client-secret"))
 
-				w.Write([]byte(`{"access_token": "access-token", "token_type": "bearer"}`))
+				w.Write([]byte(`{"access_token": "access-token", "refresh_token": "refresh-token", token_type": "bearer"}`))
 			}))
 			defer uaaServer.Close()
 
@@ -39,10 +39,11 @@ var _ = Describe("Client", func() {
 				Client:  http.DefaultClient,
 			}
 
-			accessToken, err := client.ClientCredentialGrant("client-id", "client-secret")
+			accessToken, refreshToken, err := client.ClientCredentialGrant("client-id", "client-secret")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(accessToken).To(Equal("access-token"))
+			Expect(refreshToken).To(Equal("refresh-token"))
 		})
 	})
 
@@ -328,7 +329,7 @@ var _ = Describe("Client", func() {
 			Expect(err).To(HaveOccurred())
 		},
 		Entry("client credentials", func(c *Client) error {
-			_, err := c.ClientCredentialGrant("client-id", "client-secret")
+			_, _, err := c.ClientCredentialGrant("client-id", "client-secret")
 			return err
 		}),
 		Entry("password grant", func(c *Client) error {
@@ -362,7 +363,7 @@ var _ = Describe("Client", func() {
 		},
 
 		Entry("client credentials", func(c *Client) error {
-			_, err := c.ClientCredentialGrant("client-id", "client-secret")
+			_, _, err := c.ClientCredentialGrant("client-id", "client-secret")
 			return err
 		}),
 		Entry("password grant", func(c *Client) error {
@@ -393,7 +394,7 @@ var _ = Describe("Client", func() {
 			Expect(err).To(HaveOccurred())
 		},
 		Entry("client credentials", func(c *Client) error {
-			_, err := c.ClientCredentialGrant("client-id", "client-secret")
+			_, _, err := c.ClientCredentialGrant("client-id", "client-secret")
 			return err
 		}),
 		Entry("password grant", func(c *Client) error {
@@ -424,7 +425,7 @@ var _ = Describe("Client", func() {
 			Expect(err.Error()).ToNot(BeEmpty())
 		},
 		Entry("client credentials", func(c *Client) error {
-			_, err := c.ClientCredentialGrant("client-id", "client-secret")
+			_, _, err := c.ClientCredentialGrant("client-id", "client-secret")
 			return err
 		}),
 		Entry("password grant", func(c *Client) error {

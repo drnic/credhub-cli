@@ -96,7 +96,7 @@ func (u *Client) Metadata() (*Metadata, error) {
 }
 
 // ClientCredentialGrant requests a token using client_credentials grant type
-func (u *Client) ClientCredentialGrant(clientId, clientSecret string) (string, error) {
+func (u *Client) ClientCredentialGrant(clientId, clientSecret string) (string, string, error) {
 	values := url.Values{
 		"grant_type":    {"client_credentials"},
 		"response_type": {"token"},
@@ -106,7 +106,7 @@ func (u *Client) ClientCredentialGrant(clientId, clientSecret string) (string, e
 
 	token, err := u.tokenGrantRequest(values)
 
-	return token.AccessToken, err
+	return token.AccessToken, token.RefreshToken, err
 }
 
 // PasswordGrant requests an access token and refresh token using password grant type

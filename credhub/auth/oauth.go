@@ -2,11 +2,11 @@ package auth
 
 import (
 	"bytes"
-	"strings"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync"
 )
 
@@ -27,7 +27,7 @@ type OAuthStrategy struct {
 }
 
 type OAuthClient interface {
-	ClientCredentialGrant(clientId, clientSecret string) (string, error)
+	ClientCredentialGrant(clientId, clientSecret string) (string, string, error)
 	PasswordGrant(clientId, clientSecret, username, password string) (string, string, error)
 	RefreshTokenGrant(clientId, clientSecret, refreshToken string) (string, string, error)
 	RevokeToken(token string) error
@@ -85,7 +85,7 @@ func (a *OAuthStrategy) Refresh() error {
 	var err error
 
 	if a.ClientCredentialRefresh {
-		accessToken, err = a.OAuthClient.ClientCredentialGrant(a.ClientId, a.ClientSecret)
+		accessToken, refreshToken, err = a.OAuthClient.ClientCredentialGrant(a.ClientId, a.ClientSecret)
 	} else {
 		accessToken, refreshToken, err = a.OAuthClient.RefreshTokenGrant(a.ClientId, a.ClientSecret, refreshToken)
 	}
@@ -143,7 +143,7 @@ func (a *OAuthStrategy) requestToken() error {
 	var err error
 
 	if a.ClientCredentialRefresh {
-		accessToken, err = a.OAuthClient.ClientCredentialGrant(a.ClientId, a.ClientSecret)
+		accessToken, refreshToken, err = a.OAuthClient.ClientCredentialGrant(a.ClientId, a.ClientSecret)
 	} else {
 		accessToken, refreshToken, err = a.OAuthClient.PasswordGrant(a.ClientId, a.ClientSecret, a.Username, a.Password)
 	}

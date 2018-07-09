@@ -78,7 +78,7 @@ func (c *LoginCommand) Execute([]string) error {
 	}
 
 	if c.ClientName != "" || c.ClientSecret != "" {
-		accessToken, err = uaaClient.ClientCredentialGrant(c.ClientName, c.ClientSecret)
+		accessToken, refreshToken, err = uaaClient.ClientCredentialGrant(c.ClientName, c.ClientSecret)
 	} else {
 		err = promptForMissingCredentials(c, &uaaClient)
 		if err == nil {
